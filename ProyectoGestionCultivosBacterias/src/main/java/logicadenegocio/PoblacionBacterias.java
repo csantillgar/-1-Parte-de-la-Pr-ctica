@@ -8,31 +8,19 @@ public class PoblacionBacterias {
     private Date fechaFin;
     private int numBacteriasIniciales;
     private int temperatura;
-    private String luminosidad;
-    private int dosisComidaInicial;
-    private int diaIncrementoComida;
-    private int comidaIncremento;
-    private int comidaFinal;
-    // Otros atributos y métodos necesarios
+    private String condicionesLuminosidad;
+    private DosisComida dosisComida;
 
-    // Constructor
-    public PoblacionBacterias(String nombre, Date fechaInicio, Date fechaFin, int numBacteriasIniciales, int temperatura,
-                              String luminosidad, int dosisComidaInicial, int diaIncrementoComida, int comidaIncremento,
-                              int comidaFinal) {
+    public PoblacionBacterias(String nombre, Date fechaInicio, Date fechaFin, int numBacteriasIniciales,
+                              int temperatura, String condicionesLuminosidad, DosisComida dosisComida) {
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.numBacteriasIniciales = numBacteriasIniciales;
         this.temperatura = temperatura;
-        this.luminosidad = luminosidad;
-        this.dosisComidaInicial = dosisComidaInicial;
-        this.diaIncrementoComida = diaIncrementoComida;
-        this.comidaIncremento = comidaIncremento;
-        this.comidaFinal = comidaFinal;
-        // Inicializar otros atributos
+        this.condicionesLuminosidad = condicionesLuminosidad;
+        this.dosisComida = dosisComida;
     }
 
     // Getters y setters
-    // Métodos necesarios para la gestión de poblaciones de bacterias, cálculo de comida, etc.
 }
-
