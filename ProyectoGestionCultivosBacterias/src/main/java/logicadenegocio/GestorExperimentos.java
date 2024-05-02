@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 public class GestorExperimentos {
     private List<Experimento> experimentos;
+    private Experimento experimentoActual;
 
     public GestorExperimentos() {
         this.experimentos = new ArrayList<>();
@@ -58,6 +59,10 @@ public class GestorExperimentos {
 
     public void setExperimentos(List<Experimento> experimentos) {
         this.experimentos = experimentos;
+    }
+
+    public Experimento getExperimentoActual() {
+        return experimentoActual;
     }
 }
 

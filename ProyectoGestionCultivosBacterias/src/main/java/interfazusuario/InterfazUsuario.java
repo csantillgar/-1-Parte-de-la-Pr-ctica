@@ -4,21 +4,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import logicadenegocio.GestorExperimentos;
-import java.io.*;
+import java.util.List; // Importa la clase List
 import logicadenegocio.Experimento;
+import logicadenegocio.GestorExperimentos;
+import logicadenegocio.GestorArchivos;
 
 public class InterfazUsuario {
     private JFrame frame;
     private GestorExperimentos gestorExperimentos;
+    private GestorArchivos gestorArchivos;
 
     public InterfazUsuario() {
         frame = new JFrame("Gestión de Experimentos");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gestorExperimentos = new GestorExperimentos();
+        gestorArchivos = new GestorArchivos();
         mostrarMenuPrincipal();
     }
 
@@ -47,6 +54,15 @@ public class InterfazUsuario {
             }
         });
         panel.add(abrirExperimentoButton);
+
+        JButton guardarExperimentoButton = new JButton("Guardar experimento");
+        guardarExperimentoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarExperimento();
+            }
+        });
+        panel.add(guardarExperimentoButton);
 
         JButton salirButton = new JButton("Salir");
         salirButton.addActionListener(new ActionListener() {
@@ -116,4 +132,20 @@ public class InterfazUsuario {
             }
         }
     }
+
+    private void guardarExperimento() {
+        // Obtener el experimento actual y guardarlo usando GestorArchivos
+        Experimento experimento = gestorExperimentos.getExperimentoActual();
+        if (experimento != null) {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(frame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                gestorArchivos.guardarExperimento(experimento, file);
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "No hay experimento para guardar", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
+
