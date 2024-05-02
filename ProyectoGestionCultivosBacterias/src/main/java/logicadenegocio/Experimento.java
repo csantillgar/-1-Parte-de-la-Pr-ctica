@@ -1,18 +1,18 @@
 package logicadenegocio;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Experimento {
     private String nombre;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     private List<PoblacionBacterias> poblaciones;
 
     // Constructor
-    public Experimento(String nombre, Date fechaInicio, Date fechaFin) {
+    public Experimento(String nombre, LocalDate fechaInicio, LocalDate fechaFin) {
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -29,19 +29,19 @@ public class Experimento {
         this.nombre = nombre;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
 
@@ -58,6 +58,10 @@ public class Experimento {
 
     public void eliminarPoblacion(PoblacionBacterias poblacion) {
         poblaciones.remove(poblacion);
+    }
+
+    public int calcularDuracionExperimento() {
+        return fechaInicio.until(fechaFin).getDays() + 1;
     }
 }
 

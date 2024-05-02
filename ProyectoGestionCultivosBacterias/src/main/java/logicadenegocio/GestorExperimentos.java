@@ -1,7 +1,7 @@
 package logicadenegocio;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class GestorExperimentos {
@@ -11,7 +11,7 @@ public class GestorExperimentos {
         this.experimentos = new ArrayList<>();
     }
 
-    public void crearExperimento(String nombre, Date fechaInicio, Date fechaFin) {
+    public void crearExperimento(String nombre, LocalDate fechaInicio, LocalDate fechaFin) {
         Experimento experimento = new Experimento(nombre, fechaInicio, fechaFin);
         experimentos.add(experimento);
     }
