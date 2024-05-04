@@ -22,6 +22,9 @@ public class PoblacionBacterias {
         this.dosisComida = dosisComida;
     }
 
+    public PoblacionBacterias(String nombrePoblacion, LocalDate fechaInicio, LocalDate fechaFin, int numBacteriasIniciales, int temperatura, String luminosidad, int dosisInicial, int diaIncremento, int comidaIncremento, int dosisFinal) {
+    }
+
     // Método para calcular el crecimiento diario de la población de bacterias
     public int calcularCrecimientoDiario(int dia) {
         int cantidadComida = dosisComida.calcularCantidadComida(dia);

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Experimento {
     private String nombre;
     private LocalDate fechaInicio;
@@ -17,7 +16,6 @@ public class Experimento {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.poblaciones = new ArrayList<>();
-        // Inicializar otros atributos
     }
 
     // Getters y setters
@@ -48,6 +46,7 @@ public class Experimento {
     public List<PoblacionBacterias> getPoblaciones() {
         return poblaciones;
     }
+
     public void setPoblaciones(List<PoblacionBacterias> poblaciones) {
         this.poblaciones = poblaciones;
     }
@@ -56,12 +55,34 @@ public class Experimento {
         poblaciones.add(poblacion);
     }
 
-    public void eliminarPoblacion(PoblacionBacterias poblacion) {
-        poblaciones.remove(poblacion);
+    public boolean eliminarPoblacionPorNombre(String nombrePoblacion) {
+        PoblacionBacterias poblacion = buscarPoblacionPorNombre(nombrePoblacion);
+        if (poblacion != null) {
+            return poblaciones.remove(poblacion);
+        }
+        return false;
     }
 
     public int calcularDuracionExperimento() {
         return fechaInicio.until(fechaFin).getDays() + 1;
     }
-}
 
+    public PoblacionBacterias buscarPoblacionPorNombre(String nombrePoblacion) {
+        for (PoblacionBacterias poblacion : poblaciones) {
+            if (poblacion.getNombre().equalsIgnoreCase(nombrePoblacion)) {
+                return poblacion;
+            }
+        }
+        return null;
+    }
+
+    public String getDetallesPoblacion(String nombrePoblacion) {
+        for (PoblacionBacterias poblacion : poblaciones) {
+            if (poblacion.getNombre().equalsIgnoreCase(nombrePoblacion)) {
+                return poblacion.toString();
+            }
+        }
+        return null; // Si no se encontró la población con el nombre especificado
+    }
+
+}
