@@ -27,7 +27,7 @@
                     <!-- Especifica la clase principal para el archivo .jar -->
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>interfazusuario</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

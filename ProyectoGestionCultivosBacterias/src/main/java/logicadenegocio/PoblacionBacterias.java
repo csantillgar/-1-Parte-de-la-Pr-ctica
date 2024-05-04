@@ -22,34 +22,31 @@ public class PoblacionBacterias {
         this.dosisComida = dosisComida;
     }
 
-    public PoblacionBacterias(String nombrePoblacion, LocalDate fechaInicio, LocalDate fechaFin, int numBacteriasIniciales, int temperatura, String luminosidad, int dosisInicial, int diaIncremento, int comidaIncremento, int dosisFinal) {
-    }
-
-    // Método para calcular el crecimiento diario de la población de bacterias
-    public int calcularCrecimientoDiario(int dia) {
-        int cantidadComida = dosisComida.calcularCantidadComida(dia);
-        // Ajusta la lógica según el comportamiento real de las bacterias
-        return cantidadComida / 2; // Simulación del crecimiento diario
-    }
-
-    // Método para calcular la disminución diaria de la población de bacterias
-    public int calcularDisminucionDiaria(int dia) {
-        // Ajusta la lógica según el comportamiento real de las bacterias
-        return numBacteriasIniciales / 3; // Simulación de la disminución diaria
-    }
-
-    // Método para calcular el total de bacterias al final del experimento
-    public int calcularTotalBacterias() {
-        int totalBacterias = numBacteriasIniciales;
-        for (int dia = 1; dia <= 30; dia++) {
-            int crecimiento = calcularCrecimientoDiario(dia);
-            int disminucion = calcularDisminucionDiaria(dia);
-            totalBacterias += crecimiento - disminucion;
+    public void calcularCantidadComidaDiaria() {
+        int diasExperimento = 30;
+        int diaIncremento = dosisComida.getDiaIncremento();
+        int cantidadInicial = dosisComida.getCantidadInicial();
+        int cantidadFinal = dosisComida.getCantidadFinal();
+        // Calcular la pendiente de la recta de incremento y decremento de la comida
+        double pendienteIncremento = (double) (cantidadFinal - cantidadInicial) / diaIncremento;
+        double pendienteDecremento = (double) (cantidadInicial - cantidadFinal) / (diasExperimento - diaIncremento);
+        // Calcular la cantidad de comida para cada día y almacenarla
+        for (int dia = 1; dia <= diasExperimento; dia++) {
+            if (dia <= diaIncremento) {
+                // Incremento lineal de comida
+                int cantidadComida = (int) (cantidadInicial + pendienteIncremento * dia);
+                // Aquí deberías hacer algo con la cantidad de comida calculada
+                // Por ejemplo, podrías imprimir el valor o almacenarlo en una lista
+                System.out.println("Día " + dia + ": " + cantidadComida + " unidades de comida");
+            } else {
+                // Decremento lineal de comida
+                int cantidadComida = (int) (cantidadFinal + pendienteDecremento * (dia - diaIncremento));
+                // Aquí deberías hacer algo con la cantidad de comida calculada
+                // Por ejemplo, podrías imprimir el valor o almacenarlo en una lista
+                System.out.println("Día " + dia + ": " + cantidadComida + " unidades de comida");
+            }
         }
-        return totalBacterias;
     }
-
-    // Getters y setters
     public String getNombre() {
         return nombre;
     }
@@ -106,4 +103,6 @@ public class PoblacionBacterias {
         this.dosisComida = dosisComida;
     }
 }
+
+
 

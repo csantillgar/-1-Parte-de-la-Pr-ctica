@@ -9,206 +9,251 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import logicadenegocio.Experimento;
-import logicadenegocio.GestorExperimentos;
-import logicadenegocio.GestorArchivos;
+import javax.swing.SwingUtilities;
+
+
+import logicadenegocio.*;
 
 public class InterfazUsuario {
     private JFrame frame;
-    private GestorExperimentos gestorExperimentos;
     private GestorArchivos gestorArchivos;
-    private JLabel infoLabel;
+    private DosisComida dosisComida;
+    private GestorPoblaciones gestorPoblaciones;
+    private Poblacion poblacion;
 
     public InterfazUsuario() {
         frame = new JFrame("Gestión de Experimentos");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gestorExperimentos = new GestorExperimentos();
+        frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         gestorArchivos = new GestorArchivos();
+        gestorPoblaciones = new GestorPoblaciones();
         mostrarMenuPrincipal();
     }
 
     private void mostrarMenuPrincipal() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         frame.getContentPane().add(panel);
-        panel.setLayout(new GridLayout(7, 1)); // Aumentamos el tamaño del GridLayout
+
+        JPanel menuPanel = new JPanel(new GridLayout(0, 1, 10, 10)); // Espacio entre botones
+        panel.add(menuPanel, BorderLayout.CENTER);
 
         JLabel titleLabel = new JLabel("Menú Principal", SwingConstants.CENTER);
-        panel.add(titleLabel);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(titleLabel, BorderLayout.NORTH);
 
-        JButton nuevoExperimentoButton = new JButton("Crear Nuevo Experimento");
-        nuevoExperimentoButton.addActionListener(new ActionListener() {
+        JButton abrirArchivoButton = new JButton("1. Abrir Archivo");
+        abrirArchivoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                crearNuevoExperimento();
+                JFileChooser fileChooser = new JFileChooser();
+                int seleccion = fileChooser.showOpenDialog(panel);
+                if (seleccion == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    abrirArchivo(file);
+                }
             }
         });
-        panel.add(nuevoExperimentoButton);
+        menuPanel.add(abrirArchivoButton);
 
-        JButton abrirExperimentoButton = new JButton("Abrir experimento");
-        abrirExperimentoButton.addActionListener(new ActionListener() {
+        JButton crearNuevoExperimentoButton = new JButton("2. Crear Nuevo Experimento");
+        crearNuevoExperimentoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                abrirExperimento();
+                // Aquí irá la lógica para crear un nuevo experimento
+                String nombrePoblacion = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la población de bacterias:");
+                LocalDate fechaInicio = LocalDate.now(); // Aquí puedes solicitar al usuario la fecha de inicio
+                LocalDate fechaFin = LocalDate.now().plusDays(30); // Fecha de fin después de 30 días
+                int numBacterias = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese el número de bacterias iniciales:"));
+                int temperatura = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la temperatura a la que se someterán las bacterias:"));
+                String luminosidad = (String) JOptionPane.showInputDialog(frame, "Seleccione la condición de luminosidad:",
+                        "Condición de Luminosidad", JOptionPane.QUESTION_MESSAGE, null,
+                        new String[]{"Alta", "Media", "Baja"}, "Alta");
+
+                // Aquí puedes solicitar los detalles de la dosis de comida
+                int cantidadInicial = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la cantidad inicial de comida:"));
+                int diaIncremento = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese el día hasta el cual se incrementará la cantidad de comida:"));
+                int comidaIncremento = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la comida del día hasta el cual se incrementará:"));
+                int cantidadFinal = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la cantidad final de comida en el día 30:"));
+
+                DosisComida dosisComida = new DosisComida(cantidadInicial, diaIncremento, comidaIncremento, cantidadFinal);
+
+                // Aquí puedes crear la población de bacterias con los datos ingresados por el usuario
+                // Experimento experimento = new Experimento(nombrePoblacion, fechaInicio, fechaFin, numBacterias, temperatura, luminosidad, dosisComida);
+
+                // Luego puedes realizar cualquier acción adicional que necesites con el nuevo experimento
             }
         });
-        panel.add(abrirExperimentoButton);
+        menuPanel.add(crearNuevoExperimentoButton);
 
-        JButton verPoblacionesButton = new JButton("Ver Poblaciones del Experimento Actual");
+
+        JButton crearPoblacionButton = new JButton("3. Crear Población de Bacterias");
+        crearPoblacionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Aquí irá la lógica para crear una población de bacterias
+                String nombrePoblacion = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la población de bacterias:");
+                LocalDate fechaInicio = LocalDate.now(); // Aquí puedes solicitar al usuario la fecha de inicio
+                LocalDate fechaFin = LocalDate.now().plusDays(30); // Fecha de fin después de 30 días
+                int numBacterias = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese el número de bacterias iniciales:"));
+                int temperatura = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la temperatura a la que se someterán las bacterias:"));
+                String luminosidad = (String) JOptionPane.showInputDialog(frame, "Seleccione la condición de luminosidad:",
+                        "Condición de Luminosidad", JOptionPane.QUESTION_MESSAGE, null,
+                        new String[]{"Alta", "Media", "Baja"}, "Alta");
+
+                // Aquí puedes solicitar los detalles de la dosis de comida
+                int cantidadInicial = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la cantidad inicial de comida:"));
+                int diaIncremento = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese el día hasta el cual se incrementará la cantidad de comida:"));
+                int comidaIncremento = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la comida del día hasta el cual se incrementará:"));
+                int cantidadFinal = Integer.parseInt(JOptionPane.showInputDialog(frame, "Ingrese la cantidad final de comida en el día 30:"));
+
+                DosisComida dosisComida = new DosisComida(cantidadInicial, diaIncremento, comidaIncremento, cantidadFinal);
+
+                // Crear la población de bacterias con los datos ingresados por el usuario
+                PoblacionBacterias poblacion = new PoblacionBacterias(nombrePoblacion, fechaInicio, fechaFin, numBacterias, temperatura, luminosidad, dosisComida);
+
+                // Guardar la población de bacterias utilizando el gestor de archivos
+                gestorArchivos.guardarPoblacionBacterias(poblacion, nombrePoblacion + ".dat");
+
+                // Luego puedes realizar cualquier acción adicional que necesites con la nueva población de bacterias
+            }
+        });
+
+        menuPanel.add(crearPoblacionButton);
+
+
+        JButton verPoblacionesButton = new JButton("4. Visualizar Poblaciones");
         verPoblacionesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                verPoblaciones();
+                // Aquí irá la lógica para ver las poblaciones
+                List<String> archivosPoblaciones = gestorArchivos.listarArchivosPoblacionBacterias();
+                if (archivosPoblaciones.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No hay poblaciones de bacterias almacenadas", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    StringBuilder mensaje = new StringBuilder("Poblaciones de Bacterias Almacenadas:\n");
+                    for (String archivo : archivosPoblaciones) {
+                        mensaje.append("- ").append(archivo).append("\n");
+                    }
+                    JOptionPane.showMessageDialog(frame, mensaje.toString(), "Poblaciones de Bacterias", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
-        panel.add(verPoblacionesButton);
+        menuPanel.add(verPoblacionesButton);
 
-        JButton borrarPoblacionButton = new JButton("Borrar Población del Experimento Actual");
-        borrarPoblacionButton.addActionListener(new ActionListener() {
+
+        JButton borrarPoblacionButton = new JButton("5. Borrar Población");
+        gestorPoblaciones = new GestorPoblaciones();
+
+        // Configuración de la interfaz de usuario
+        JButton botonBorrarPoblacion = new JButton("Borrar Población");
+        botonBorrarPoblacion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                borrarPoblacion();
+                String nombrePoblacion = JOptionPane.showInputDialog("Ingrese el nombre de la población a borrar:");
+                if (nombrePoblacion != null && !nombrePoblacion.isEmpty()) {
+                    gestorPoblaciones.borrarPoblacion(nombrePoblacion);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe ingresar un nombre de población válido.");
+                }
             }
         });
-        panel.add(borrarPoblacionButton);
+        menuPanel.add(borrarPoblacionButton);
 
-        JButton verDetallesPoblacionButton = new JButton("Ver Detalles de una Población");
-        verDetallesPoblacionButton.addActionListener(new ActionListener() {
+        JButton verDetallesPoblacionButton = new JButton("6. Ver Detalles de Población");
+        JButton botonVerDetalles = new JButton("Ver Detalles de Población");
+        botonVerDetalles.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                verDetallesPoblacion();
+                String nombrePoblacion = JOptionPane.showInputDialog("Ingrese el nombre de la población:");
+                if (nombrePoblacion != null && !nombrePoblacion.isEmpty()) {
+                    Poblacion poblacion = gestorPoblaciones.obtenerPoblacion(nombrePoblacion);
+                    if (poblacion != null) {
+                        mostrarDetallesPoblacion(poblacion);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontró la población especificada.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe ingresar un nombre de población válido.");
+                }
             }
         });
-        panel.add(verDetallesPoblacionButton);
 
-        JButton eliminarPoblacionPorNombreButton = new JButton("Eliminar Población por Nombre");
-        eliminarPoblacionPorNombreButton.addActionListener(new ActionListener() {
+
+
+        menuPanel.add(verDetallesPoblacionButton);
+
+        JButton guardarButton = new JButton("7. Guardar");
+        guardarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                eliminarPoblacionPorNombre();
-            }
+                // Aquí irá la lógica para guardar el experimento
+                 }
         });
-        panel.add(eliminarPoblacionPorNombreButton); // Agregamos el botón para eliminar poblaciones por nombre
+        menuPanel.add(guardarButton);
 
-        JButton salirButton = new JButton("Salir");
+        JButton salirButton = new JButton("8. Salir");
         salirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.dispose();
+                int confirm = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres salir?", "Confirmar salida", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
             }
         });
-        panel.add(salirButton);
+        menuPanel.add(salirButton);
 
         frame.setVisible(true);
     }
 
-    private void crearNuevoExperimento() {
-        JFrame dialog = new JFrame("Crear Nuevo Experimento");
-        dialog.setSize(400, 300);
-        dialog.setLayout(new GridLayout(6, 2));
+    private void mostrarDetallesPoblacion(Poblacion poblacion) {
+        JPanel panel = new JPanel(new BorderLayout());
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panel);
 
-        JLabel nombreLabel = new JLabel("Nombre:");
-        JTextField nombreField = new JTextField();
-        dialog.add(nombreLabel);
-        dialog.add(nombreField);
+        JPanel detallesPanel = new JPanel(new GridLayout(0, 1, 10, 10)); // Espacio entre elementos
+        panel.add(detallesPanel, BorderLayout.CENTER);
 
-        JLabel fechaInicioLabel = new JLabel("Fecha de inicio (DD/MM/AAAA):");
-        JTextField fechaInicioField = new JTextField();
-        dialog.add(fechaInicioLabel);
-        dialog.add(fechaInicioField);
+        JLabel titleLabel = new JLabel("Detalles de Población", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel fechaFinLabel = new JLabel("Fecha de fin (DD/MM/AAAA):");
-        JTextField fechaFinField = new JTextField();
-        dialog.add(fechaFinLabel);
-        dialog.add(fechaFinField);
+        JLabel nombreLabel = new JLabel("Nombre: " + poblacion.getNombre());
+        detallesPanel.add(nombreLabel);
 
-        JButton crearButton = new JButton("Crear");
-        crearButton.addActionListener(new ActionListener() {
+        JLabel numIndividuosLabel = new JLabel("Número de Individuos: " + poblacion.getNumeroIndividuos());
+        detallesPanel.add(numIndividuosLabel);
+
+        JLabel fechaRegistroLabel = new JLabel("Fecha de Registro: " + poblacion.getFechaRegistro());
+        detallesPanel.add(fechaRegistroLabel);
+
+        JButton volverButton = new JButton("Volver");
+        volverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre = nombreField.getText();
-                String fechaInicioStr = fechaInicioField.getText();
-                String fechaFinStr = fechaFinField.getText();
-
-                try {
-                    LocalDate fechaInicio = LocalDate.parse(fechaInicioStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    LocalDate fechaFin = LocalDate.parse(fechaFinStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-                    gestorExperimentos.crearExperimento(nombre, fechaInicio, fechaFin);
-
-                    dialog.dispose();
-
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Error al crear el experimento. Asegúrese de ingresar fechas en el formato correcto (DD/MM/AAAA).", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                mostrarMenuPrincipal();
             }
         });
-        dialog.add(crearButton);
+        panel.add(volverButton, BorderLayout.SOUTH);
 
-        dialog.setVisible(true);
+        frame.setVisible(true);
     }
 
-    private void abrirExperimento() {
-        JFileChooser fileChooser = new JFileChooser();
-        int result = fileChooser.showOpenDialog(frame);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                Experimento experimento = (Experimento) ois.readObject();
-                // Aquí puedes hacer algo con el experimento abierto, por ejemplo:
-                JOptionPane.showMessageDialog(frame, "Experimento abierto: " + experimento.getNombre());
-            } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(frame, "Error al abrir el experimento", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+    private void abrirArchivo(File file) {
+        try (FileInputStream fis = new FileInputStream(file);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
 
-    private void verPoblaciones() {
-        List<String> poblaciones = gestorExperimentos.getPoblacionesExperimentoActual();
-        if (poblaciones.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "No hay poblaciones en el experimento actual", "Información", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            StringBuilder poblacionesStr = new StringBuilder("Poblaciones del Experimento Actual:\n");
-            for (String poblacion : poblaciones) {
-                poblacionesStr.append(poblacion).append("\n");
-            }
-            JOptionPane.showMessageDialog(frame, poblacionesStr.toString(), "Poblaciones", JOptionPane.PLAIN_MESSAGE);
-        }
-    }
+            PoblacionBacterias poblacion = (PoblacionBacterias) ois.readObject();
 
-    private void borrarPoblacion() {
-        String poblacionABorrar = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la población a borrar:");
-        if (poblacionABorrar != null) {
-            boolean borrado = gestorExperimentos.borrarPoblacion(poblacionABorrar);
-            if (borrado) {
-                JOptionPane.showMessageDialog(frame, "Población eliminada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(frame, "No se encontró la población especificada", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+            // Aquí puedes hacer lo que necesites con la población cargada desde el archivo
+            // Por ejemplo, podrías mostrar los detalles de la población en una nueva ventana o hacer cualquier otra operación
 
-    private void verDetallesPoblacion() {
-        String nombrePoblacion = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la población:");
-        if (nombrePoblacion != null) {
-            String detalles = gestorExperimentos.getDetallesPoblacion(nombrePoblacion);
-            if (detalles != null) {
-                JOptionPane.showMessageDialog(frame, detalles, "Detalles de la Población", JOptionPane.PLAIN_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(frame, "No se encontró la población especificada", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+            JOptionPane.showMessageDialog(frame, "Archivo cargado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 
-    // Método para eliminar poblaciones por nombre
-    private void eliminarPoblacionPorNombre() {
-        String nombrePoblacion = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la población a eliminar:");
-        if (nombrePoblacion != null) {
-            gestorExperimentos.eliminarPoblacionPorNombre(nombrePoblacion);
-            JOptionPane.showMessageDialog(frame, "Población eliminada por nombre", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(frame, "Error al cargar el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
